@@ -151,7 +151,10 @@ class clamav::params {
     $clamd_version     = 'installed'
     $clamd_config      = '/etc/clamav/clamd.conf'
     $clamd_service     = 'clamav-daemon'
-    $clamd_options     = {}
+    $clamd_options     = {
+      'LocalSocket' => '/var/run/clamav/clamd.ctl',
+      'LocalSocketGroup' => 'clamav'
+    }
 
     # ### freshclam vars ####
     $freshclam_package = 'clamav-freshclam'
@@ -163,11 +166,18 @@ class clamav::params {
     $freshclam_delay     = undef
 
     # ### clamav_milter vars ####
-    $clamav_milter_package     = undef
-    $clamav_milter_version     = undef
-    $clamav_milter_config      = undef
-    $clamav_milter_service     = undef
-    $clamav_milter_options     = undef
+    $clamav_milter_package     = 'clamav-milter'
+    $clamav_milter_version     = 'installed'
+    $clamav_milter_config      = '/etc/clamav/clamav-milter.conf'
+    $clamav_milter_service     = 'clamav-milter'
+    $clamav_milter_options     = {
+      'User' => 'clamav',
+      'MilterSocket' => '/var/run/clamav/clamav-milter.ctl',
+      'PidFile' => '/var/run/clamav/clamav-milter.pid',
+      'ClamdSocket' => 'unix:/var/run/clamav/clamd.ctl',
+      'LogFile' => '/var/log/clamav/clamav-milter.log',
+      'MilterSocketGroup' => 'clamav'
+    }
     $clamav_milter_default_options = undef
 
     # ### Default values OS specific ####
