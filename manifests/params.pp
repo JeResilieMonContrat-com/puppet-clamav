@@ -18,13 +18,13 @@ class clamav::params {
   $clamav_milter_service_ensure = 'running'
   $clamav_milter_service_enable = true
 
-  if ($::osfamily == 'RedHat') and (versioncmp($::operatingsystemrelease, '6.0') >= 0) {
+  if ($facts['os']['family'] == 'RedHat') and (versioncmp($facts['os']['release']['full'], '6.0') >= 0) {
     # ### init vars ####
     $manage_repo    = true
     $clamav_package = 'clamav'
     $clamav_version = 'installed'
 
-    if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
+    if versioncmp($facts['os']['release']['major'], '7') >= 0 {
       # ### user vars ####
       $user              = 'clamscan'
       $comment           = 'Clamav scanner user'
@@ -58,7 +58,7 @@ class clamav::params {
       $freshclam_delay     = undef
 
       # ### RHEL8/Centos8 actually do have a service
-      if versioncmp($::operatingsystemmajrelease, '8') >= 0 {
+      if versioncmp($facts['os']['release']['major'], '8') >= 0 {
         $freshclam_service = 'clamav-freshclam'
       } else {
         $freshclam_service = undef
@@ -127,9 +127,9 @@ class clamav::params {
     $clamd_default_temporarydirectory = '/var/tmp'
     $freshclam_default_pidfile        = undef # cron is used
 
-  } elsif ($::osfamily == 'Debian') and (
-    (($::operatingsystem == 'Debian') and (versioncmp($::operatingsystemrelease, '7.0') >= 0)) or
-    (($::operatingsystem == 'Ubuntu') and (versioncmp($::operatingsystemrelease, '12.0') >= 0))
+  } elsif ($facts['os']['family'] == 'Debian') and (
+    (($facts['os']['name'] == 'Debian') and (versioncmp($facts['os']['release']['full'], '7.0') >= 0)) or
+    (($facts['os']['name'] == 'Ubuntu') and (versioncmp($facts['os']['release']['full'], '12.0') >= 0))
   ) {
     # ### init vars ####
     $manage_repo       = false
@@ -193,7 +193,7 @@ class clamav::params {
     $freshclam_default_updatelogfile  = '/var/log/clamav/freshclam.log'
 
   } else {
-    fail("The ${module_name} module is not supported on a ${::osfamily} based system with version ${::operatingsystemrelease}.")
+    fail("The ${module_name} module is not supported on a ${facts['os']['family']} based system with version ${facts['os']['release']['full']}.")
   }
 
   $clamd_default_options = {

@@ -4,13 +4,13 @@
 
 class clamav::clamav_milter {
 
-  unless (($::osfamily == 'RedHat') and (versioncmp($::operatingsystemrelease, '7.0') >= 0)) or (
-    ($::osfamily == 'Debian') and (
-      (($::operatingsystem == 'Debian') and (versioncmp($::operatingsystemrelease, '7.0') >= 0)) or
-      (($::operatingsystem == 'Ubuntu') and (versioncmp($::operatingsystemrelease, '12.0') >= 0))
+  unless (($facts['os']['family'] == 'RedHat') and (versioncmp($facts['os']['release']['full'], '7.0') >= 0)) or (
+    ($facts['os']['family'] == 'Debian') and (
+      (($facts['os']['name'] == 'Debian') and (versioncmp($facts['os']['release']['full'], '7.0') >= 0)) or
+      (($facts['os']['name'] == 'Ubuntu') and (versioncmp($facts['os']['release']['full'], '12.0') >= 0))
     )
   ) {
-    fail("OS family ${::osfamily}-${::operatingsystemrelease} is not supported. Only RedHat >= 7 is suppported.")
+    fail("OS family ${facts['os']['family']}-${facts['os']['release']['full']} is not supported. Only RedHat >= 7 is suppported.")
   }
 
   $config_options = $clamav::_clamav_milter_options
